@@ -1,0 +1,53 @@
+{% extends "_entry/default" %}
+
+{% block content %}
+	<div class="article-section">
+		<div class="in">
+			<div class="grid with-gutters">
+				<div class="unit unit50">
+					{% if entry.body|length %}
+						{{ entry.body }}
+					{% endif %}
+				</div>
+				<div class="unit unit50">
+					<div class="map-container">
+						<div id="map"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	{% if entry.form|length %}
+		<div class="article-section highlight">
+			<div class="in super-squeeze">
+				<h2>Get in touch</h2>
+				{% include '_partials/form' with { 'form':entry.form, 'buttonText':'Send message' } %}
+			</div>
+		</div>
+	{% endif %}
+{% endblock %}
+
+{% block scripts %}
+	<script>
+		function initMap() {
+			var map = new google.maps.Map(document.getElementById('map'), {
+				zoom: 15,
+				center: { lat:50.543659, lng:-3.498136 },
+				draggable: !("ontouchend" in document)
+			});
+			var geocoder = new google.maps.Geocoder(),
+				address = 'Teignmouth Lifeboat Station, Teignmouth TQ14 8BT, UK';
+
+			geocoder.geocode({'address': address}, function(results, status) {
+				if (status === google.maps.GeocoderStatus.OK) {
+					map.setCenter(results[0].geometry.location);
+					var marker = new google.maps.Marker({
+						map: map,
+						position: results[0].geometry.location
+					});
+				}
+			});
+		}
+	</script>
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBDts383AqbNbxfIQWxXBz7z_iV_blpCAY&callback=initMap" async defer></script>
+{% endblock %}

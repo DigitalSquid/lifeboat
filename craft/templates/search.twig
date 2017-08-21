@@ -1,0 +1,35 @@
+{# add all sections that you want to be excluded from search results #}
+
+{% extends "_layout" %}
+
+{% set query = craft.request.getParam('q') %}
+{% set entries = craft.entries({
+	'search': query,
+	'order': 'score',
+	'section': 'and, not ctas, not search',
+}) %}
+
+{% block header %}
+	<div class="page-header">
+		<div class="in">
+			<h1>Search Results</h1>
+		</div>
+	</div>
+{% endblock %}
+
+{% block content %}
+	<div class="results">
+		<div class="in">
+			{% if entries|length %}
+				<h3>{{ entries | length }} results for <strong>{{ query }}</strong></h3>
+				<ul>
+					{% for entry in entries %}
+						<li><a href="{{ entry.url }}">{{ entry.title }}</a></li>
+					{% endfor %}
+				</ul>
+			{% else %}
+				<p class="align-center">Your search for <strong>{{ query }}</strong> didn’t return any results.</p>
+			{% endif %}
+		</div>
+	</div>
+{% endblock %}

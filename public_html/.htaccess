@@ -1,0 +1,25 @@
+## DON'T BE TEMPTED to abuse this file for one-off 301-redirects. (Use something like Reroute instead).
+
+# switch on rewrite engine.
+RewriteEngine On
+RewriteBase /
+
+# Rewrite all apple touch icons to a single file and let them resize it.
+# https://gist.github.com/davidhund/332316f82440ef4377f3
+RewriteRule ^apple-touch-icon(.*).png$ apple-touch-icon.png [L]
+
+# Remove trailing slashes.
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} ^(.+)/$
+RewriteRule ^(.+)/$ /$1 [R=301,L]
+
+#add dubdubs
+RewriteCond %{HTTP_HOST} !^www\.
+RewriteCond %{HTTP_HOST} !^lifeboat.dev
+RewriteRule ^(.*)$ http://www.%{HTTP_HOST}/$1 [R=301,L]
+
+# Send would-be 404 requests to Craft
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !^/(favicon\.ico|apple-touch-icon.*\.png)$ [NC]
+RewriteRule (.+) index.php?p=$1 [QSA,L]

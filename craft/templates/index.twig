@@ -1,0 +1,117 @@
+{% extends "_layout" %}
+
+{# ============================================================================ #}
+
+{% set latestShout = craft.entries.section('shouts').limit(1).first %}
+{% set fundraisingNews = craft.entries.section('fundraisingNews').limit(3) %}
+{% set excerptThumb = { mode:'crop', width:650, position:'top-center' } %}
+
+{# Calculate the total number of people assited this year #}
+{% set shoutsThisYear = craft.entries.section('shouts').launchDate('>= ' ~ 'now'|date('Y')) %}
+{% set totalAssisted = 0 %}
+{% if shoutsThisYear|length %}
+	{% for shout in shoutsThisYear %}
+		{% set totalAssisted = totalAssisted + shout.peopleAssisted %}
+	{% endfor %}
+{% endif %}
+
+{% set title = entry.pageTitle %}
+{# {% set title = entry.titleTag|length ? entry.titleTag : entry.title %} #}
+{# {% set metaDesc = entry.metaDescription %}
+{% set noIndex = entry.noIndex %}
+{% set canonicalLink = entry.canonicalLink %} #}
+
+{# ============================================================================ #}
+
+{% block bodyClass %}{{ entry.slug }}{% endblock %}
+
+{% block pageTitle %}
+	<p>Welcome to the</p>
+	<h1>RNLI Teignmouth</h1>
+	<p>Lifeboat station</p>
+	<a href="/donate" class="button">Make a Donation</a>
+{% endblock %}
+
+{% block content %}
+	{% if shoutsThisYear|length %}
+		<section class="article-section recent-stats">
+			<div class="in">
+				<div class="grid with-gutters">
+					<div class="unit align-center">
+						<h2>Services {{ 'now'|date('Y') }}</h2>
+					</div>
+					<div class="unit unit33">
+						<div class="stat launches">
+							<span class="icon">
+								<svg class="svg-launches-dims">
+									<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#launches"></use>
+								</svg>
+							</span>
+							<span class="content">
+								<span class="number">{{ shoutsThisYear|length }}</span> Launches
+							</span>
+						</div>
+					</div>
+					<div class="unit unit33">
+						<div class="stat assisted">
+							<span class="icon">
+								<svg class="svg-assisted-dims">
+									<use xlink:href="#assisted"></use>
+								</svg>
+							</span>
+							<span class="content">
+								<span class="number">{{ totalAssisted }}</span> People Assisted
+							</span>
+						</div>
+					</div>
+					<div class="unit unit33">
+						<div class="stat established">
+							<span class="icon">
+								<svg class="svg-anchor-dims">
+									<use xlink:href="#anchor"></use>
+								</svg>
+							</span>
+							<span class="content">
+								<span class="number">1851</span> Saving lives since
+							</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	{% endif %}
+
+	<div class="article-section">
+		<div class="in">
+			<div class="grid with-gutters">
+				<div class="unit major">
+					{% if latestShout|length %}
+						<article class="excerpt">
+							<h2>Latest Shout</h2>
+							<time>{{ latestShout.launchTime }} - {{ latestShout.launchDate|date('jS F Y') }}</time>
+							<div>
+								{{ latestShout.report }}
+							</div>
+						</article>
+					{% endif %}
+				</div>
+				<div class="unit minor">
+					{% if fundraisingNews|length %}
+						<h3> Fundraising News</h3>
+						{% for item in fundraisingNews %}
+							{% set image = item.featuredImage.first %}
+						    <a href="{{ item.url }}" class="excerpt-image">
+								<figure>
+									<img src="{{ image.getUrl(excerptThumb) }}" alt="{{ item }}"/>
+									<figcaption>
+										<span>{{ item }}</span>
+									</figcaption>
+								</figure>
+							</a>
+						{% endfor %}
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

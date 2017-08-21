@@ -1,0 +1,26 @@
+{% extends '_listing/default' %}
+
+{# ======================================
+THE PURPOSE OF THIS TEMPLATE IS TO SET
+ALL THE DATA READY FOR CONSUMPTION BY
+_listing/default.
+
+We can also optionally override or add
+to any content blocks in that template
+with our own markup here.
+Don't forget you can use {{ parent() }}
+function to effectively append into a block).
+========================================= #}
+
+{% switch craft.request.segment(1) %}
+
+	{% case 'something' %}
+
+{% endswitch %}
+
+{# Set the main pageEntries var #}
+{% paginate craft.entries({
+	relatedTo:tag,
+	limit: 9,
+	order: 'postDate desc'
+}) as pageInfo, pageEntries %}

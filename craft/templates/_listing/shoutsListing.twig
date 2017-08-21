@@ -1,0 +1,31 @@
+{% extends "_listing/default" %}
+
+{% paginate craft.entries({ section:'shouts' }).limit(9) as pageInfo, pageEntries %}
+
+{% block itemContent %}
+	{% if pageEntries|length %}
+		<div class="article-section extra-padded">
+			<div class="in super-squeeze">
+				{% for entry in pageEntries %}
+					{% set launchDate = entry.launchDate %}
+					{% set assisted = entry.peopleAssisted %}
+					<div class="shout{{ loop.first ? ' first' }}">
+						<time class="launch-date" datetime="{{ launchDate }} {{ entry.launchTime }}" itemprop="datePublished">
+							<span class="calendar">
+								<span class="month">{{ launchDate|date('M') }}</span>
+								<span class="day">{{ launchDate|date('d') }}</span>
+							</span>
+							<span class="year">{{ launchDate|date('Y') }}</span>
+						</time>
+						<div class="content">
+							<div class="assisted">
+								<p><strong>{{ assisted }} {{ assisted > 1 ? 'people' : 'person' }} assisted</strong></p>
+							</div>
+							{{ entry.report }}
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+	{% endif %}
+{% endblock %}

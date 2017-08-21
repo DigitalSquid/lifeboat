@@ -1,0 +1,19 @@
+<footer class="site-footer article-section">
+	<div class="in">
+		<div class="grid with-gutters">
+			<div class="unit major">
+				{% if footer.strapline|length %}
+					<p class="strap-line">{{ footer.strapline }}</p>
+				{% endif %}
+				{% if footer.body|length %}
+					{{ footer.body }}
+				{% endif %}
+				<p class="copyright">Copyright &copy; {{ 'now'|date('Y') }} {{ siteName }}. All rights reserved.</p>
+			</div>
+			<div class="unit minor">
+				<p class="faux-heading">Follow Us</p>
+				{% include '_partials/social-links' %}
+			</div>
+		</div>
+	</div>
+</footer>

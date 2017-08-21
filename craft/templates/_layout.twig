@@ -1,0 +1,93 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+	{% set ogTitle %}{{ ogTitle ?? title ?? siteName }}{% endset %}
+	{% set ogDesc %}{{ ogDesc ?? metaDesc ?? null }}{% endset %}
+	{% set ogImg %}{{ ogImg ?? siteUrl ~ 'assets/img/logo.png' }}{% endset %}
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>{{ ogTitle }}</title>
+	<meta property="og:title" content="{{ ogTitle }}">
+	<meta property="og:type" content="{{ ogType|default('website') }}">
+	<meta property="og:url" content="{{ craft.request.url }}">
+	<meta property="og:image" content="{{ ogImg }}">
+	<meta property="og:site_name" content="{{ siteName }}">
+	{% if ogDesc %}<meta property="og:description" content="{{ ogDesc|striptags }}">{% endif %}
+	<meta name="twitter:card" content="{{ twitterCard|default('summary') }}">
+	{% if socialLinks.twitterHandle %}<meta name="twitter:site" content="@{{ socialLinks.twitterHandle }}">{% endif %}
+	{% if twitterCreator is defined and twitterCreator %}<meta name="twitter:creator" content="{{ twitterCreator }}">{% endif %}
+
+	{% if craft.config.env != 'live' %}
+		<meta name="robots" content="noindex,nofollow">
+	{% endif %}
+
+	<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png" />
+	<link rel="icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="home" href="{{ siteUrl }}" />
+	<link rel="stylesheet" href="/assets/css/style.css" media="all" />
+
+	{% if customScripts.trackingCodes|length %}
+		{{ customScripts.trackingCodes|raw }}
+	{% endif %}
+
+	{% include '_partials/modernizr' %}
+</head>
+
+<body class="{{ block('bodyClass') }}" id="top">
+	{% include '_partials/svg-sprite/svg-sprite.html' %}
+	<header class="branding" data-js="headerTransition">
+		<div class="in group">
+			<a href="/" class="site-title">
+				<span><span class="hidden-mini-inline">RNLI </span>Teignmouth</span>
+				<svg class="site-logo svg-rnli-lifeboats-logo-dims">
+					<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#rnli-lifeboats-logo"></use>
+				</svg>
+			</a>
+			
+			<ul class="main-navigation" data-js="navMenu">
+				<li><a href="/shouts">Shouts</a></li>
+				<li><a href="/fundraising">Fundraising</a></li>
+				<li class="sub-menu">
+					<span>About</span>
+					<ul>
+						<li><a href="/crew">Crew</a></li>
+						<li><a href="/lifeboats">Lifeboats</a></li>
+						<li><a href="/history">History</a></li>
+					</ul>
+				</li>
+				<li><a href="/contact">Contact</a></li>
+			</ul>
+
+			<div class="menu-trigger show-menu" data-js="navTrigger">
+				<span></span>
+				<span></span>
+				<span></span>
+			</div>
+		</div>
+	</header>
+
+	<main id="content">
+		{% set headerImage = header.headerImage.first %}
+		{% if headerImage|length %}
+			<div class="page-heading" style="background-image:url('{{ headerImage.url }}')">
+				<div class="in super-squeeze">
+					<div class="highlight-box">
+						{{ block('pageTitle') }}
+					</div>
+				</div>
+				<div class="seperator">
+					<img src="/assets/img/rnli-flag.png" height="42px" width="67px" />
+				</div>
+			</div>
+		{% endif %}
+		{{ block('content') }}
+	</main>
+
+	{% include '_partials/footer' %}
+
+	<script src="/assets/scripts/js.min.js"></script>
+	{{ block('scripts') }}
+
+</body>
+</html>

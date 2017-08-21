@@ -1,0 +1,17 @@
+{% macro socialLink(link, name) %}
+	{% if link|length %}
+		<li>
+			<a href="{{ name == 'twitter' ? 'https://twitter.com/' }}{{ link }}">
+				<svg viewBox="0 0 24 24" class="svg-{{ name }}-dims">
+					<use xlink:href="#{{ name }}"></use>
+				</svg>
+			</a>
+		</li>
+	{% endif %}
+{% endmacro	%}
+
+<ul class="social-icons list-inline">
+	{{ _self.socialLink(socialLinks.facebook, 'facebook') }}
+	{{ _self.socialLink(socialLinks.twitterHandle, 'twitter') }}
+	{{ _self.socialLink(socialLinks.googlePlus, 'google') }}
+</ul>

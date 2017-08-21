@@ -1,0 +1,31 @@
+{% extends "_listing/default" %}
+
+{% set crew = craft.entries({ section:'crew' }) %}
+{% set categories = craft.categories.group('crewType') %}
+
+{% set profilePhoto = { mode:'crop', width:420, height:420, quality:100, position:'top-center' } %}
+
+{% block itemContent %}
+	{% for crewType in categories %}
+		{% set crewGroup = crew.relatedTo(crewType) %}
+		{% if crewGroup|length %}
+			<div class="article-section{{ loop.index is even ? ' highlight' }}">
+				<div class="in">
+					<h2 class="align-center">{{ crewType }}</h2>
+					<div class="grid with-gutters">
+						{% for entry in crewGroup %}
+							{% set photo = entry.photo.first ?? '/assets/img/awaiting-photo.png' %}
+							<div class="unit unit25">
+								<div class="crew-member">
+									<img src="{{ photo.getUrl(profilePhoto) }}" width="{{ photo.getWidth(profilePhoto) }}" height="{{ photo.getHeight(profilePhoto) }}" />
+									<span class="name">{{ entry }}</span>
+									<span class="role">{{ entry.role }}</span>
+								</div>
+							</div>
+						{% endfor %}
+					</div>
+				</div>
+			</div>
+		{% endif %}
+	{% endfor %}
+{% endblock %}

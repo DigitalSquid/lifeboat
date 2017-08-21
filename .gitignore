@@ -1,3 +1,11 @@
-# Craft Storage (cache) [http://buildwithcraft.com/help/craft-storage-gitignore]
 /craft/storage/*
-!/craft/storage/logo/*
+!/craft/storage/rebrand/*
+craft/config/local/*
+.DS_Store
+sftp-config.json
+*sublime-*
+node_modules
+.sass-cache
+public_html/assets/css/*\.css\.map
+public_html/images
+public_html/media

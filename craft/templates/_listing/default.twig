@@ -1,0 +1,55 @@
+{% extends "_layout" %}
+
+{% block pageTitle %}
+	<h1>{{ entry.pageTitle|length ? entry.pageTitle : entry.title }}</h1>
+{% endblock %}
+
+{% block content %}
+	<article>
+		{% if entry.body %}
+			<div class="article-section">
+				<div class="in">
+					{% if entry.body|length %}
+						{{ entry.body }}
+					{% endif %}
+				</div>
+			</div>
+		{% endif %}
+
+		{% block itemContent %}
+			{% if pageEntries|length %}
+				<div class="article-section extra-padded">
+					<div class="in">
+						{% for entry in pageEntries %}
+						    <h2>{{ entry }}</h2>
+							<div class="content">
+								{{ entry.body }}
+							</div>
+						{% endfor %}
+					</div>
+				</div>
+			{% endif %}
+		{% endblock %}
+
+		{% if pageInfo is defined %}
+			{% if pageInfo.prevUrl or pageInfo.nextUrl %}
+				<div class="article-section">
+					<div class="in">
+						<div class="grid with-gutters">
+							<div class="unit unit50">
+								{% if pageInfo.prevUrl %}
+									<a href="{{ pageInfo.prevUrl }}" class="previous-entry">Previous Page</a>
+								{% endif %}
+							</div>
+							<div class="unit unit50">
+								{% if pageInfo.nextUrl %}
+									<a href="{{ pageInfo.nextUrl }}" class="next-entry">Next Page</a>
+								{% endif %}
+							</div>
+						</div>
+					</div>
+				</div>
+			{% endif %}
+		{% endif %}
+	</article>
+{% endblock %}

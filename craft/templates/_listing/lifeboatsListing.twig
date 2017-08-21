@@ -1,0 +1,29 @@
+{% extends "_listing/default" %}
+
+{% paginate craft.entries({ section:'lifeboats' }).limit(9) as pageInfo, pageEntries %}
+
+{% set excerptThumb = { mode:'crop', width:650, position:'center-center' } %}
+
+{% block itemContent %}
+	{% if pageEntries|length %}
+		<div class="article-section">
+			<div class="in">
+				<div class="grid with-gutters">
+					{% for entry in pageEntries %}
+						{% set image = entry.featuredImage.first %}
+						<div class="unit unit50">
+							<a href="{{ entry.url }}" class="excerpt-image">
+								<figure>
+									<img src="{{ image.getUrl(excerptThumb) }}" alt="{{ entry }}"/>
+									<figcaption>
+										<span>{{ entry }}</span>
+									</figcaption>
+								</figure>
+							</a>
+						</div>
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+	{% endif %}
+{% endblock %}

@@ -1,0 +1,86 @@
+{% extends "_listing/default" %}
+
+{% set eventCrop = { mode:'crop', width:650, position:'center-center' } %}
+{% set orderBy = craft.request.getQuery('order') %}
+{% set order = orderBy == 'oldest' ? 'asc' : 'desc' %}
+{% paginate craft.entries({
+	section:'history',
+	order:'year ' ~ order
+}) as pageInfo, pageEntries %}
+
+{% block itemContent %}
+	{% if pageEntries|length %}
+		<div class="article-section">
+			<div class="in">
+				<div class="filter">
+					<div class="order-by">
+						<p class="label">Order by:</p>
+						{% if orderBy == 'oldest'%}
+							<a class="filter" href="{{ entry.url }}">Newest</a>
+							<span class="filter">Oldest</span>
+						{% else %}
+							<span class="filter">Newest</span>
+							<a class="filter" href="?order=oldest">Oldest</a>
+						{% endif %}
+					</div>
+				</div>
+				<div class="timeline">
+					<div class="timeline-dates">
+						<ul class="group">
+							{% for entry in pageEntries %}
+								<li><a href="#" data-index="{{ loop.index0 }}" class="timeline-date{{ loop.first ? ' active' }}">{{ entry.year }}</a></li>
+							{% endfor %}
+						</ul>
+					</div>
+					<div class="timeline-events">
+						<div class="timeline-slides">
+							{% for entry in pageEntries %}
+								<div class="event">
+									{% set image = entry.featuredImage.first %}
+									{% if image|length %}
+										<div class="grid with-gutters">
+											<div class="unit minor">
+												<img class="event-image" src="{{ image.getUrl(eventCrop) }}" width="{{ image.getWidth(eventCrop) }}" height="{{ image.getHeight(eventCrop) }}" />
+											</div>
+											<div class="unit major">{{ entry.body }}</div>
+										</div>
+									{% else %}
+										{{ entry.body }}
+									{% endif %}
+								</div>
+							{% endfor %}
+						</div>
+						<button class="event-nav event-prev"></button>
+						<button class="event-nav event-next"></button>
+					</div>
+				</div>
+			</div>
+		</div>
+	{% endif %}
+{% endblock %}
+
+{% block scripts %}
+	<script>
+		var $timelineSlides = $('.timeline-slides'),
+			$timelineWrap = $('.timeline-dates ul');
+			$timelineDate = $('.timeline-date'),
+			dateWidth = $timelineDate.outerWidth();
+
+		$timelineSlides.slick({
+			infinite:false,
+			prevArrow:'.event-prev',
+			nextArrow:'.event-next'
+		}).on('beforeChange', function(event, slick, currentSlide, nextSlide){
+			$('.timeline-date.active').removeClass('active');
+			$timelineDate.eq(nextSlide).addClass('active');
+			$timelineWrap.css({ 'left' : 'calc(50% - ' + dateWidth * (nextSlide + 1) + 'px)' })
+		});
+
+		$timelineDate.click(function() {
+			$('.timeline-date.active').removeClass('active');
+			$(this).addClass('active');
+			$timelineSlides.slick('slickGoTo', $(this).data('index'), false);
+			return false;
+		})
+	</script>
+{% endblock %}

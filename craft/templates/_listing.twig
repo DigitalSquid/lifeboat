@@ -1,0 +1,16 @@
+{# ======================================
+This template is the first stage in handling the display of multiple entries on a single page.
+
+It ensures that differing content models (currently just entries or categores) are routed to
+templates that can handle the supplied data correctly. It also allows for a flexible override
+system to be used so more unique or complex templates can be used for specific Category Groups
+or Entry Sections/Channels
+========================================= #}
+
+{% set defaultListingType = category is defined ? 'entriesByCategory' : 'entries' %}
+{% set override = category is defined ? category.group.handle : entry.section.handle %}
+
+{% include [
+	'_listing/' ~ override,
+	'_listing/handlers/' ~ defaultListingType,
+] %}

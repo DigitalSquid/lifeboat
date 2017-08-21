@@ -1,0 +1,62 @@
+{% extends "_entry/default" %}
+
+{# ============================================================================ #}
+
+{% set imageThumb = { mode:'crop', width:650, position:'center-center' } %}
+
+{% macro techSpec(item, title) %}
+	{% if item|length %}
+		<dt>{{ title }}</dt>
+		<dd>{{ item }}</dd>
+	{% endif %}
+{% endmacro %}
+
+{# ============================================================================ #}
+
+{% block pageTitle %}
+	<p class="faux-heading">{{ entry.section }}</p>
+{% endblock %}
+
+{% block content %}
+	{% set techSpecs = entry.technicalSpecifications %}
+	<article>
+		<div class="article-section">
+			<div class="in">
+				<div class="grid with-gutters">
+					<div class="unit major">
+						<h1>{{ entry }}</h1>
+						{% if entry.boatName|length %}
+							<p class="boat-name">{{ entry.boatName }}</p>
+						{% endif %}
+						{% if entry.featuredImage|length %}
+							{% set asset = entry.featuredImage.first %}
+							<img src="{{ asset.getUrl(imageThumb) }}" width="{{ asset.getWidth(imageThumb) }}" height="{{ asset.getHeight(imageThumb) }}" alt="{{ entry }}"/>
+						{% endif %}
+						{% if entry.body|length %}
+							{{ entry.body }}
+						{% endif %}
+					</div>
+					<aside class="unit minor">
+						<div class="technical-specs">
+							<h2>Technical Specifications</h2>
+							{% if techSpecs.illustration %}
+								{% set asset = techSpecs.illustration.first %}
+								<img src="{{ asset.getUrl(imageThumb) }}" width="{{ asset.getWidth(imageThumb) }}" height="{{ asset.getHeight(imageThumb) }}" alt="{{ entry }}"/>
+							{% endif %}
+							<dl>
+								{{ _self.techSpec(techSpecs.crew, 'Crew') }}
+								{{ _self.techSpec(techSpecs.survivorCapacity, 'Survivor Capacity') }}
+								{{ _self.techSpec(techSpecs.maximumSpeed, 'Maximum Speed') }}
+								{{ _self.techSpec(techSpecs.range, 'Range') }}
+								{{ _self.techSpec(techSpecs.length, 'Length') }}
+								{{ _self.techSpec(techSpecs.width, 'Width') }}
+								{{ _self.techSpec(techSpecs.weight, 'Weight') }}
+								{{ _self.techSpec(techSpecs.engines, 'Engines') }}
+							</dl>
+						</div>
+					</aside>
+				</div>
+			</div>
+		</div>
+	</article>
+{% endblock %}
